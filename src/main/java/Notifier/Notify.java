@@ -1,14 +1,11 @@
-package Notify;
+package Notifier;
 
 import com.google.gson.Gson;
 import org.apache.http.client.ClientProtocolException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
 /**
@@ -16,27 +13,21 @@ import java.net.URL;
  */
 public class Notify {
 
-    public static void main(String[] args) {
+    public boolean doNotify(Push push)
+    {
         try {
-
-            String url = "https://api.pushbullet.com/v2/pushes";
+            String url =Configurations.url;
             URL object = new URL(url);
 
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
             con.setDoOutput(true);
             con.setDoInput(true);
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("Content-Type", Configurations.contentType);
+            con.setRequestProperty("Accept", Configurations.contentType);
             con.setRequestMethod("POST");
-            con.setRequestProperty("Access-Token", "LOL");
+            con.setRequestProperty("Access-Token", Configurations.accessToken);
 
-            // Request parameters and other properties.
-            Push push = new Push();
-            push.setType("link");
-            push.setTitle("New Internship Posting");
-            push.setBody("Some Message");
-            push.setUrl("http://google.com");
-
+            //Post
             Gson gson = new Gson();
             OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
             wr.write(gson.toJson(push));
@@ -44,7 +35,7 @@ public class Notify {
 
             int HttpResult = con.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK)
-                System.out.print("Ok");
+                return true;
 
         } catch (UnsupportedEncodingException e) {
             System.out.print("Epic Fail");
@@ -56,5 +47,6 @@ public class Notify {
             System.out.print("Epic Fail");
             e.printStackTrace();
         }
+        return false;
     }
 }

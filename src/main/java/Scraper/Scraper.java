@@ -1,24 +1,36 @@
 package Scraper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Valar Dohaeris on 12/22/16.
  */
-public class Scrape {
+public class Scraper {
 
-    public static void main(String[] args)
+    private boolean validate(String post)
     {
+        return post.toLowerCase().contains(ScrapeConfigurations.keyword1)
+                ||post.toLowerCase().contains(ScrapeConfigurations.keyword2)
+                ||post.toLowerCase().contains(ScrapeConfigurations.keyword3)
+                ||post.toLowerCase().contains(ScrapeConfigurations.testKeyword);
+    }
+
+    public List<Data> scrape()
+    {
+
+        List<Data> results=new ArrayList<Data>();
+
         try {
-            Document doc = Jsoup.connect("https://news.ycombinator.com/jobs").get();
+            Document doc = Jsoup.connect(ScrapeConfigurations.mainUrl).get();
             if(doc!=null)
             {
                 String body=doc.body().text();
@@ -27,24 +39,22 @@ public class Scrape {
                 while(m.find())
                 {
                     String post=m.group(1);
-                    post=post.replaceAll("Hacker News new | comments | show | ask | jobs | submit login " +
-                            "These are jobs at startups that were funded by Y Combinator. " +
-                            "You can also get a job at a YC startup through Triplebyte.","");
+                    post=post.replaceAll(ScrapeConfigurations.headers,"");
 
                     String actualPost=post;
-                    if(post.toLowerCase().contains("gitlab")
-                            ||post.toLowerCase().contains("internship")
-                            ||post.toLowerCase().contains("intern")) //is your string. do what you want
+                    if(validate(post))
                     {
-                        System.out.print(actualPost);
                         Elements links=Jsoup.parse(doc.toString()).select("a");
                         for (Element link:links)
                         {
                             if(actualPost.contains(link.text()))
                             {
                                 String linkFinal=link.attr("href");
-                                if(!linkFinal.equals("http://www.ycombinator.com"))
-                                    System.out.print(linkFinal);
+                                if(!linkFinal.equals(ScrapeConfigurations.skipUrl)) {
+                                    System.out.println(linkFinal);
+                                    results.add(new Data(post,linkFinal));
+                                    break;
+                                }
                             }
                         }
                     }
@@ -53,5 +63,6 @@ public class Scrape {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return results;
     }
 }

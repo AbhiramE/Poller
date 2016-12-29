@@ -1,4 +1,4 @@
-package Notify;
+package Notifier;
 
 import lombok.Data;
 
