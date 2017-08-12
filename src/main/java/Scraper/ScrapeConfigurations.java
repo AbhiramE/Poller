@@ -14,4 +14,5 @@ public final class ScrapeConfigurations {
     static String testKeyword="remote";
     static String skipUrl="http://www.ycombinator.com";
     static String mainUrl="https://news.ycombinator.com/jobs";
+    static String trendingUrl="https://angel.co/companies/trending/trending";
 }

@@ -1,7 +1,7 @@
 import Notifier.Notify;
 import Notifier.Push;
 import Scraper.Data;
-import Scraper.Scraper;
+import Scraper.TrendingCompaniesScraper;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class Initiator {
 
-    static String url="https://news.ycombinator.com/";
+    //static String url="https://news.ycombinator.com/";
 
     public static void main(String[] args) {
 
-        Scraper scraper=new Scraper();
+        TrendingCompaniesScraper scraper=new TrendingCompaniesScraper();
         Notify notify=new Notify();
         int count=0;
 
@@ -24,12 +24,9 @@ public class Initiator {
         {
             Push push=new Push();
             push.setType("link");
-            push.setTitle("New Internship Posting from "+result.getPost().split(" ")[0]);
-            push.setBody(result.getPost());
-            if(result.getUrl().contains("http"))
-                push.setUrl(result.getUrl());
-            else
-                push.setUrl(url+result.getUrl());
+            push.setTitle("New Trending Company "+result.getPost());
+            push.setBody("Check this new company out");
+            push.setUrl(result.getUrl());
             if(notify.doNotify(push))
                 count++;
         }
