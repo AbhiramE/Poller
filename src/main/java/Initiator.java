@@ -1,6 +1,7 @@
 import Notifier.Notify;
 import Notifier.Push;
 import Scraper.Data;
+import Scraper.RemitlyScraper;
 import Scraper.TrendingCompaniesScraper;
 
 import java.util.List;
@@ -10,30 +11,29 @@ import java.util.List;
  */
 public class Initiator {
 
-    //static String url="https://news.ycombinator.com/";
-
     public static void main(String[] args) {
 
-        TrendingCompaniesScraper scraper=new TrendingCompaniesScraper();
+        RemitlyScraper scraper=new RemitlyScraper();
         Notify notify=new Notify();
         int count=0;
 
         List<Data> results=scraper.scrape();
 
-        for (Data result:results)
-        {
-            Push push=new Push();
-            push.setType("link");
-            push.setTitle("New Trending Company "+result.getPost());
-            push.setBody("Check this new company out");
-            push.setUrl(result.getUrl());
-            if(notify.doNotify(push))
-                count++;
-        }
+        if(results!=null) {
+            for (Data result : results) {
+                Push push = new Push();
+                push.setType("link");
+                push.setTitle("Remitly has a better exchange rate of " + result.getPost() + " !!");
+                push.setBody("Exchange now");
+                push.setUrl(result.getUrl());
+                if (notify.doNotify(push))
+                    count++;
+            }
 
-        if(count==results.size())
-            System.out.println("All Succeeded");
-        else
-            System.out.println("Success: "+count+" Out of "+results.size());
+            if (count == results.size())
+                System.out.println("All Succeeded");
+            else
+                System.out.println("Success: " + count + " Out of " + results.size());
+        }
     }
 }

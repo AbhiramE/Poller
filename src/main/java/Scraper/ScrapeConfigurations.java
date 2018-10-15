@@ -15,4 +15,5 @@ public final class ScrapeConfigurations {
     static String skipUrl="http://www.ycombinator.com";
     static String mainUrl="https://news.ycombinator.com/jobs";
     static String trendingUrl="https://angel.co/companies/trending/trending";
+    static String remitlyUrl= "https://www.remitly.com/us/en/india/";
 }

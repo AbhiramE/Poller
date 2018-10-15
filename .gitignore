@@ -1,4 +1,4 @@
 .idea/
 *.iml
 target/
-src/main/java/Notifier/Configurations.java
+src/main/java/Notifier/Configurations*
